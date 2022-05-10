@@ -1,0 +1,4 @@
+httpx
+# for image post
+Pillow
+blurhash-python

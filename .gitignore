@@ -1,0 +1,11 @@
+**/.git/
+**/__pycache__/
+**/.DS_Store
+
+**/.vscode/
+
+**/*.tmp
+**/tmp.*
+**/*.log
+
+data/
