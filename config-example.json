@@ -1,5 +1,0 @@
-{
-    "topic-id": "", // Use Mixin bot 7000104503 to create a new topic / read topics to get the id
-    "topic-token": "",
-    "nasa-api-key": "" // get your own key from https://api.nasa.gov/
-}

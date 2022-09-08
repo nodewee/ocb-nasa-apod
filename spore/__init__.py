@@ -1,2 +1,2 @@
-""" InfoWoods SDK """
-__version__ = "0.0.1"
+""" Spore - InfoWoods SDK """
+__version__ = "0.1.2"

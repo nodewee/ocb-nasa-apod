@@ -1,19 +1,9 @@
 from dataclasses import dataclass
 
 
-class RequestError(BaseException):
-    def __init__(self, status_code, message):
-        self.status_code = status_code
-        self.message = message
-        super().__init__(message)
-
-
 @dataclass(frozen=True)
 class _OrderTypes:
-    CREATE_TOPIC: str = "1"
-
-
-from dataclasses import dataclass
+    CREATE_CHANNEL: str = "1"
 
 
 @dataclass(frozen=True)
@@ -27,6 +17,13 @@ class _InfoContentTypes:
     FILE: str = "FILE"
 
 
-INFO_CONTENT_TYPES = _InfoContentTypes()
+@dataclass(frozen=True)
+class _SettingNames:
+    LANG: str = "lang"
+    UTC_OFFSET: str = "utc"
+
+
+API_BASE_URL = "https://api.infowoods.com/v3"
 ORDER_TYPES = _OrderTypes()
-API_BASE_URL = "https://api.infowoods.com/v2"
+INFO_CONTENT_TYPES = _InfoContentTypes()
+SETTING_NAMES = _SettingNames()

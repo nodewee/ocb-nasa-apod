@@ -53,6 +53,7 @@ class Translator(object):
     def _request(self, url, data=None):
         encoded_data = urlencode(data).encode("utf-8")
         req = request.Request(url=url, headers=self.headers, data=encoded_data)
+        req.timeout = 45
         resp = request.urlopen(req)
         content = resp.read()
         return content.decode("utf-8")

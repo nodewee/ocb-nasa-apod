@@ -1,4 +1,4 @@
 httpx
-# for image post
+# for publishing image
 Pillow
 blurhash-python
