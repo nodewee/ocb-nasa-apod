@@ -72,3 +72,32 @@ def pack_image_content(
         "thumbnail": thumbnail,
     }
     return INFO_CONTENT_TYPES.IMAGE, payload
+
+
+def pack_video_content(
+    attachment_id: str,
+    mime_type: str,
+    size: int,
+    width: int,
+    height: int,
+    duration: int,
+    thumbnail: str = None,
+    created_at: str = None,
+):
+    """
+    Args:
+        attachment_id: "Read From POST /attachments"
+        mime_type: e.g. "video/mp4"
+        thumbnail: "base64 encoded"
+    """
+    payload = {
+        "attachment_id": attachment_id,
+        "mime_type": mime_type,
+        "width": width,
+        "height": height,
+        "size": size,
+        "duration": duration,
+        "thumbnail": thumbnail,
+        "created_at": created_at,
+    }
+    return INFO_CONTENT_TYPES.VIDEO, payload

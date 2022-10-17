@@ -2,11 +2,6 @@ from dataclasses import dataclass
 
 
 @dataclass(frozen=True)
-class _OrderTypes:
-    CREATE_CHANNEL: str = "1"
-
-
-@dataclass(frozen=True)
 class _InfoContentTypes:
     TEXT: str = "TEXT"
     MARKDOWN: str = "MARKDOWN"
@@ -24,6 +19,8 @@ class _SettingNames:
 
 
 API_BASE_URL = "https://api.infowoods.com/v3"
-ORDER_TYPES = _OrderTypes()
 INFO_CONTENT_TYPES = _InfoContentTypes()
 SETTING_NAMES = _SettingNames()
+
+NORMAL_COIN_NAME = "NUT"
+GIFT_COIN_NAME = "gNUT"

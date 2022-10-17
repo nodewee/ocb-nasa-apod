@@ -1,6 +1,4 @@
 from io import FileIO
-from typing import Union
-
 import httpx
 
 from .request import HttpRequest
@@ -42,7 +40,7 @@ class ApiInterface:
 
     def orders_payment(self, app_name, trace_id, headers: dict = None):
         path = "/orders/payment"
-        body = {"app_name": app_name, "trace_id": trace_id}
+        body = {"app_name": app_name, "mm_trace_id": trace_id}
         return self._request.post(path, body=body, headers=headers)
 
     def channels_list(self, headers: dict = None):
@@ -117,30 +115,101 @@ class ApiInterface:
         path = f"/attachments/{attachment_id}"
         return self._request.get(path, headers=headers)
 
-    def attachments_upload(self, upload_url: str, file: Union[FileIO, bytes]):
-        """use attachment_create() to get upload_url
+    def attachments_upload(self, upload_url: str, file_io: FileIO, timeout: int = 120):
+        """
+        - upload_url, use attachment_create() to get
 
         Directly upload file to upload_url(AWS S3 URL from Mixin Messenger)
         """
         headers = {}
         headers["Content-Type"] = "application/octet-stream"
         headers["x-amz-acl"] = "public-read"
+        # headers["Content-Length"] = str(len(file_data))
 
-        return httpx.put(upload_url, data=file, headers=headers, timeout=120)
+        params = {
+            "url": upload_url,
+            "data": file_io,
+            "headers": headers,
+            "timeout": timeout,
+        }
 
-    def subscriptions_create(self, channel_id, headers: dict = None):
+        return httpx.put(**params)
+
+    def subscriptions_subscribe(
+        self,
+        channel_id: str = None,
+        channel_uri: str = None,
+        headers: dict = None,
+    ):
         """Subscribe a channel"""
         path = "/subscriptions"
-        body = {"channel_id": channel_id}
-        return self._request.post(path, body=body, headers=headers)
+        payload = {}
+        if channel_id:
+            payload["channel_id"] = channel_id
+        if channel_uri:
+            payload["channel_uri"] = channel_uri
+        return self._request.post(path, body=payload, headers=headers)
 
-    def subscriptions_disable(self, channel_id, headers: dict = None):
+    def subscriptions_unsubscribe(
+        self,
+        channel_id: str = None,
+        channel_uri: str = None,
+        headers: dict = None,
+    ):
         """Unsubscribe a channel"""
-        path = f"/subscriptions/{channel_id}"
-        body = {"enabled": False}
-        return self._request.put(path, body=body, headers=headers)
+        path = "/subscriptions"
+        payload = {}
+        if channel_id:
+            payload["channel_id"] = channel_id
+        if channel_uri:
+            payload["channel_uri"] = channel_uri
+        return self._request.delete(path, body=payload, headers=headers)
+
+    def subscriptions_bulk_subscribe(
+        self,
+        channel_ids: list = None,
+        channel_uris: list = None,
+        collection_ids: list = None,
+        headers: dict = None,
+    ):
+        """Bulk Subscribe channels"""
+        path = "/subscriptions/assemble"
+        payload = {"action": "bulk_subscribe"}
+        if channel_ids:
+            payload["channel_ids"] = channel_ids
+        if channel_uris:
+            payload["channel_uris"] = channel_uris
+        if collection_ids:
+            payload["collection_ids"] = collection_ids
+        return self._request.post(path, body=payload, headers=headers)
+
+    def subscriptions_bulk_unsubscribe(
+        self,
+        channel_ids: list = None,
+        channel_uris: list = None,
+        collection_ids: list = None,
+        headers: dict = None,
+    ):
+        """Bulk Unsubscribe channels"""
+        path = "/subscriptions/assemble"
+        payload = {"action": "bulk_unsubscribe"}
+        if channel_ids:
+            payload["channel_ids"] = channel_ids
+        if channel_uris:
+            payload["channel_uris"] = channel_uris
+        if collection_ids:
+            payload["collection_ids"] = collection_ids
+        return self._request.post(path, body=payload, headers=headers)
 
     def subscriptions_list_enabled(self, headers: dict = None):
         """List user's subscriptions"""
         path = f"/subscriptions?enabled=true"
         return self._request.get(path, headers=headers)
+
+    def data_read(self, table: str, params: dict, headers: dict = None):
+        path = f"/data/{table}"
+        return self._request.get(path, query_params=params, headers=headers)
+
+    def data_write(self, table: str, payload, headers: dict = None):
+        path = f"/data/{table}"
+        return self._request.post(path, body=payload, headers=headers)

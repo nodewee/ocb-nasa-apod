@@ -113,6 +113,40 @@ class HttpRequest:
 
         return _parse_response(rsp)
 
+    def delete(
+        self,
+        path,
+        query_params: dict = None,
+        body: Union[dict, list] = None,
+        headers: dict = None,
+        request_id=None,
+        timeout=30,
+    ):
+        url = self.api_base + path
+        if body:
+            bodystring = json.dumps(body)
+        else:
+            bodystring = {}
+        _token = self.get_auth_token("DELETE", path, bodystring)
+        _headers = _make_headers(_token, headers, request_id)
+
+        try:
+            logging.info(f"HTTP DELETE {url}")
+            rsp = self.session.request(
+                "DELETE",
+                url,
+                params=query_params,
+                headers=_headers,
+                data=bodystring,
+                timeout=timeout,
+            )
+        except (httpx.ReadTimeout, httpx.ConnectTimeout, httpx.WriteTimeout) as e:
+            raise RequestTimeout(None, str(e)) from None
+        except Exception as e:
+            raise RequestError(1, str(e)) from None
+
+        return _parse_response(rsp)
+
 
 def _make_headers(
     bearer_token: str = None, headers: dict = None, request_id: str = None
