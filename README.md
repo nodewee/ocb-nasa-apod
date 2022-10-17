@@ -11,8 +11,8 @@ Oak Channel Bot - NASA Astronomy Picture of the Day
     - `../config/nasa.json`, content reference "example.config.nasa.json" file
 
 3. Install dependencies
-    `pdm install` or,
-    `pip3 install -r requirements.txt`
+    - `pdm install` or,
+    - `pip3 install -r requirements.txt`
 
 4. Run bot
     `python main.py`
@@ -24,8 +24,6 @@ API used:
 - [InfoWoods API](https://github.com/infowoods/docs)
 - [NASA API](https://api.nasa.gov/)
 - Google Translator
-
-Contact me on Mixin Messenger: `37297553` (ZN)
 
 ## LICENSE
 
